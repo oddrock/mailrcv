@@ -2,6 +2,7 @@
 /.settings
 .classpath
 .project
+/logs
 /src/main/resources/
 /settings/
 /mailrecord/
