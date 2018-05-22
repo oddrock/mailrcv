@@ -1,0 +1,8 @@
+/target/
+/.settings
+.classpath
+.project
+/src/main/resources/
+/settings/
+/mailrecord/
+TODO.md
