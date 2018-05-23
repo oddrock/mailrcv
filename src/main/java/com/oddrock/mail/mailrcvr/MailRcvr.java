@@ -16,6 +16,7 @@ import com.oddrock.common.office.excel.ExcelUtils;
 import com.oddrock.common.office.ppt.PptUtils;
 import com.oddrock.common.office.word.WordUtils;
 import com.oddrock.common.pdf.PdfUtils;
+import com.oddrock.common.pic.PicUtils;
 import com.oddrock.common.prop.Prop;
 
 public class MailRcvr {
@@ -41,6 +42,14 @@ public class MailRcvr {
 			PptUtils.createTxtFileFromPpt(file);
 		}else if(suffix.equalsIgnoreCase("pdf")){
 			PdfUtils.createTxtFileFromPdf(file);
+		}else if(suffix.equalsIgnoreCase("tiff") || suffix.equalsIgnoreCase("tif")){
+			String newFilePath = PicUtils.transferTiff2Jpg(file.getCanonicalPath());
+			if(newFilePath!=null){
+				PicUtils.createTxtFileFromPic(new File(newFilePath));
+			}
+		}else if(suffix.equalsIgnoreCase("jpg") || suffix.equalsIgnoreCase("jpeg")
+				|| suffix.equalsIgnoreCase("bmp") || suffix.equalsIgnoreCase("png")){
+			PicUtils.createTxtFileFromPic(file);
 		}
 	}
 
@@ -53,7 +62,6 @@ public class MailRcvr {
 		Pop3Config pop3Config = new Pop3Config(server, account, passwd, localAttachDirPath, rejectAddresses);
 		List<MailRecv> mailList = new Pop3MailRcvr().rcvMail(pop3Config);
 		for(MailRecv mail : mailList){
-			System.out.println(mail.getSubject());
 			parseMailAttachFile2TxtFile(mail);
 		}
 	}
