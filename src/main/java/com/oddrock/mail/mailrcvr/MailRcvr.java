@@ -61,9 +61,12 @@ public class MailRcvr {
 		String rejectAddresses = Prop.get("mail.rejectAddresses");
 		Pop3Config pop3Config = new Pop3Config(server, account, passwd, localAttachDirPath, rejectAddresses);
 		List<MailRecv> mailList = new Pop3MailRcvr().rcvMail(pop3Config);
-		for(MailRecv mail : mailList){
-			parseMailAttachFile2TxtFile(mail);
+		if(Prop.getBool("mail.attach.file2txt")){
+			for(MailRecv mail : mailList){
+				parseMailAttachFile2TxtFile(mail);
+			}
 		}
+		
 	}
 
 }
