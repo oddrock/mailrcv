@@ -80,10 +80,20 @@ public class MailRcvr {
 	}
 
 	public static void main(String[] args) throws Exception {
+		boolean useBakdir = false;
+		for(String arg : args){
+			if(arg.equalsIgnoreCase("bakdir")){
+				useBakdir = true;
+				break;
+			}
+		}
 		String server = Prop.get("mail.popserver");
 		String account = Prop.get("mail.account");
 		String passwd = Prop.get("mail.passwd");
 		String localAttachDirPath = Prop.get("mail.savefolder");
+		if(useBakdir){			// 一般无法收到sd卡所在目录，就先收到c盘，再移动过去
+			localAttachDirPath = Prop.get("mail.savefolder.bak");
+		}
 		String rejectAddresses = Prop.get("mail.rejectAddresses");
 		Pop3Config pop3Config = new Pop3Config(server, account, passwd, localAttachDirPath, rejectAddresses);
 		List<MailRecv> mailList = new Pop3MailRcvr().rcvMail(pop3Config);
@@ -96,6 +106,9 @@ public class MailRcvr {
 			for(MailRecv mail : mailList){
 				parseMailAttachFile2TxtFile(mail);
 			}
+		}
+		if(useBakdir){
+			FileUtils.mvDirToParentDir(new File(Prop.get("mail.savefolder.bak")), new File(Prop.get("mail.savefolder")).getParentFile());
 		}
 	}
 
